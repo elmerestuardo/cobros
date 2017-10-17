@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>ePanel</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!--<link href="Content/bootstrap.min.css" rel="stylesheet" type="text/css"/>-->
+        <link href="materialize/css/materialize.css" rel="stylesheet" type="text/css"/>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <style>
+            body {
+                display: flex;
+                min-height: 100vh;
+                flex-direction: column;
+            }
+
+            main {
+                flex: 1 0 auto;
+            }
+            #map {
+                height: 100%;
+            }
+
+            #map-canvas {
+                margin: 0;
+                padding: 0;
+                height: 400px;
+                max-width: 100%;
+            }
+            #map-canvas img {
+                max-width: none !important;
+            }
+            .gm-style-iw {
+                width: 350px !important;
+                top: 15px !important;
+                left: 0px !important;
+                background-color: #fff;
+                box-shadow: 0 1px 6px rgba(178, 178, 178, 0.6);
+                border: 1px solid #DF0000;
+                border-radius: 2px 2px 10px 10px;
+            }
+            #iw-container {
+                margin-bottom: 10px;
+            }
+            #iw-container .iw-title {
+                font-family: 'Open Sans Condensed', sans-serif;
+                font-size: 22px;
+                font-weight: 400;
+                padding: 10px;
+                background-color: #DF0000;
+                color: white;
+                margin: 0;
+                border-radius: 2px 2px 0 0;
+            }
+            #iw-container .iw-content {
+                font-size: 13px;
+                line-height: 18px;
+                font-weight: 400;
+                margin-right: 1px;
+                padding: 15px 5px 20px 15px;
+                max-height: 140px;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+            .iw-content img {
+                float: right;
+                margin: 0 5px 5px 10px;	
+            }
+            .iw-subTitle {
+                font-size: 16px;
+                font-weight: 700;
+                padding: 5px 0;
+            }
+            .iw-bottom-gradient {
+                position: absolute;
+                width: 326px;
+                height: 25px;
+                bottom: 10px;
+                right: 18px;
+                background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+                background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+                background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+                background: -ms-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+            }
+        </style>
+    </head>
+    <nav>
+        <div class="nav-wrapper" style="background-color:#DF0000;">
+            <a href="#!" class="brand-logo">MAPFRE</a>
+            <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+            <ul class="right hide-on-med-and-down">
+                <li><a href="#">Inicio</a></li>
+                <li><a href="#">Nosotros</a></li>
+                <li><a href="#">Noticias</a></li>
+                <li><a href="#">Clientes</a></li>
+                <li><a href="#" class="btn waves-effect waves-light hoverable red">Login</a></li>
+            </ul>
+            <ul class="side-nav" id="mobile-demo">
+                <li><a href="#">Inicio</a></li>
+                <li><a href="#">Nosotros</a></li>
+                <li><a href="#">Noticias</a></li>
+                <li><a href="#">Clientes</a></li>
+                <li><a href="#" class="btn waves-effect waves-light hoverable red">Login</a></li>
+            </ul>
+        </div>
+    </nav>
+    <main>
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <h4>Ubicaciones</h4>
+                <div class="col s12 m6 l6">
+                    <div id="map-canvas"></div>
+                </div>
+                <div class="col s12 m6 l6">
+
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="page-footer" style="background-color:#DF0000;">
+        <div class="footer-copyright" style="background-color:#DF0000;">
+            <div class="container">
+                Seguros MAPFRE Guatemala © 2017 Copyright | Todos los derechos reservados
+                <a class="grey-text text-lighten-4 right" href="#!">Facebook</a>
+            </div>
+        </div>
+    </footer>
+    <script src="Scripts/jquery-1.9.1.min.js" type="text/javascript"></script>
+    <!--<script src="Scripts/bootstrap.min.js" type="text/javascript"></script>-->
+    <script src="materialize/js/materialize.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        function initialize() {
+            // map center
+            var center = new google.maps.LatLng(14.603969, -90.515449);
+
+// marker position
+            var factory = new google.maps.LatLng(14.603969, -90.515449);
+            var mapOptions = {
+                center: center,
+                zoom: 16,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+
+            var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+
+            // InfoWindow content
+            var content = '<div id="iw-container">' +
+                    '<div class="iw-title">Seguros Mapfre Guatemala</div>' +
+                    '<div class="iw-content">' +
+                    '<div class="iw-subTitle">Quiénes somos</div>' +
+                    '<img src="../recursos/logoMapfre.png" alt="Porcelain Factory of Vista Alegre" height="115" width="83">' +
+                    '<p>En MAPFRE somos un grupo empresarial, multinacional e independiente con más de <b>80 años de experiencia</b>, que abarca todos los ámbitos de la actividad aseguradora, reaseguradora, financiera, inmobiliaria y de servicio; lo cual nos convierte en una Empresa global integral, confiable y consolidada.' +
+                    '<br>Nuestro negocio de Seguros en Guatemala se ha centrado en los diferentes ramos de Seguros como <b>Autos, Vida, Accidentes, Salud, y Ramos Diversos.</b>' +
+                    '<br><b>MAPFRE</b> ofrece un servicio integral de atención de Siniestro, con una amplia red médica y de talleres en el territorio nacional.</p>' +
+                    '<div class="iw-subTitle">Contacto</div>' +
+                    '<p>Avenida La Reforma 9-55 Zona 10<br>Edificio Reforma 10 Guatemala, C.A.<br>' +
+                    '<br><b>PBX:</b> (502) 2375-5000 y (502) 2328-5000<br><b>FAX:</b> (502) 2375-5001<br>Oficina 105 <b>- Atención Clientes</b><br>Oficina 304 <b>- Administración, Áreas Comercial y Técnica</b><br>www.mapfre.com.gt</p>' +
+                    '</div>' +
+                    '<div class="iw-bottom-gradient"></div>' +
+                    '</div>';
+
+            // A new Info Window is created and set content
+            var infowindow = new google.maps.InfoWindow({
+                content: content,
+
+                // Assign a maximum value for the width of the infowindow allows
+                // greater control over the various content elements
+                maxWidth: 350
+            });
+
+            // marker options
+            var marker = new google.maps.Marker({
+                position: factory,
+                map: map,
+                title: 'Seguros Mapfre Guatemala',
+                icon: '../recursos/mapfre.ico'
+            });
+
+            // This event expects a click on a marker
+            // When this event is fired the Info Window is opened.
+            google.maps.event.addListener(marker, 'click', function () {
+                infowindow.open(map, marker);
+            });
+
+            // Event that closes the Info Window with a click on the map
+            google.maps.event.addListener(map, 'click', function () {
+                infowindow.close();
+            });
+
+            // *
+            // START INFOWINDOW CUSTOMIZE.
+            // The google.maps.event.addListener() event expects
+            // the creation of the infowindow HTML structure 'domready'
+            // and before the opening of the infowindow, defined styles are applied.
+            // *
+            google.maps.event.addListener(infowindow, 'domready', function () {
+
+                // Reference to the DIV that wraps the bottom of infowindow
+                var iwOuter = $('.gm-style-iw');
+
+                /* Since this div is in a position prior to .gm-div style-iw.
+                 * We use jQuery and create a iwBackground variable,
+                 * and took advantage of the existing reference .gm-style-iw for the previous div with .prev().
+                 */
+                var iwBackground = iwOuter.prev();
+
+                // Removes background shadow DIV
+                iwBackground.children(':nth-child(2)').css({'display': 'none'});
+
+                // Removes white background DIV
+                iwBackground.children(':nth-child(4)').css({'display': 'none'});
+
+                // Moves the infowindow 115px to the right.
+                iwOuter.parent().parent().css({left: '115px'});
+
+                // Moves the shadow of the arrow 76px to the left margin.
+                iwBackground.children(':nth-child(1)').attr('style', function (i, s) {
+                    return s + 'left: 76px !important;'
+                });
+
+                // Moves the arrow 76px to the left margin.
+                iwBackground.children(':nth-child(3)').attr('style', function (i, s) {
+                    return s + 'left: 76px !important;'
+                });
+
+                // Changes the desired tail shadow color.
+                iwBackground.children(':nth-child(3)').find('div').children().css({'box-shadow': 'rgba(72, 181, 233, 0.6) 0px 1px 6px', 'z-index': '1'});
+
+                // Reference to the div that groups the close button elements.
+                var iwCloseBtn = iwOuter.next();
+
+                // Apply the desired effect to the close button
+                iwCloseBtn.css({opacity: '1', right: '20px', top: '3px', border: '7px solid #DF000', 'border-radius': '13px', 'box-shadow': '0 0 5px #DF0000'});
+
+                // If the content of infowindow not exceed the set maximum height, then the gradient is removed.
+                if ($('.iw-content').height() < 140) {
+                    $('.iw-bottom-gradient').css({display: 'block'});
+                }
+
+                // The API automatically applies 0.7 opacity to the button after the mouseout event. This function reverses this event to the desired value.
+                iwCloseBtn.mouseout(function () {
+                    $(this).css({opacity: '1'});
+                });
+            });
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+
+    <!--<script type="text/javascript">
+        $(".button-collapse").sideNav();
+        var map;
+        function initMap() {            
+            var myLatLng = {lat: 14.603969, lng: -90.515449};
+
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 15,
+                center: myLatLng
+            });
+
+            var marker = new google.maps.Marker({
+                position: myLatLng,
+                draggable: true,
+                animation: google.maps.Animation.DROP,
+                map: map,
+                title: 'Seguros Mapfre Guatemala',
+                icon: '../recursos/mapfre.ico'
+            });
+
+            var contentString = '<div class="row">' +
+                    '<div class="col s12 m7">' +
+                    '<div class="card">' +
+                    '<div class="card-image">' +
+                    '<img src="../recursos/logoMapfre.png">' +
+                    '<span class="card-title">Card Title</span>' +
+                    '</div>' +
+                    '<div class="card-content">' +
+                    '<p>I am a very simple card. I am good at containing small bits of information.' +
+                    'I am convenient because I require little markup to use effectively.</p>' +
+                    '</div>' +
+                    '<div class="card-action">' +
+                    '<a href="#">This is a link</a>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>';
+            var info = new google.maps.InfoWindow({
+                content: contentString
+            });
+            marker.addListener('click', function () {
+                info.open(map, marker);
+            });
+            marker.setMap(map);
+        }        
+        function toggleBounce() {
+            if (marker.getAnimation() !== null) {
+                marker.setAnimation(null);
+            } else {
+                marker.setAnimation(google.maps.Animation.BOUNCE);
+            }
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+    </script>-->
+    <script src="https://maps.googleapis.com/maps/api/js?callback=initialize"
+    async defer></script>
+</html>
