@@ -180,10 +180,21 @@ and open the template in the editor.
                 title: 'Seguros Mapfre Guatemala',
                 icon: '../recursos/mapfre.ico'
             });
+            
+            var marker2 = new google.maps.Marker({
+                position: new google.maps.LatLng(14.604554,  -90.515381),
+                map: map,
+                title: 'Seguros Mapfre Guatemala',
+                icon: '../recursos/mapfre.ico'
+            });
 
             // This event expects a click on a marker
             // When this event is fired the Info Window is opened.
             google.maps.event.addListener(marker, 'click', function () {
+                infowindow.open(map, marker);
+            });
+            
+            google.maps.event.addListener(marker2, 'click', function () {
                 infowindow.open(map, marker);
             });
 
@@ -257,7 +268,7 @@ and open the template in the editor.
         function initMap() {            
             var myLatLng = {lat: 14.603969, lng: -90.515449};
 
-            var map = new google.maps.Map(document.getElementById('map'), {
+            var map = new google.maps.Map(document.getElementById('map-canvas'), {
                 zoom: 15,
                 center: myLatLng
             });
@@ -303,7 +314,7 @@ and open the template in the editor.
                 marker.setAnimation(google.maps.Animation.BOUNCE);
             }
         }
-        google.maps.event.addDomListener(window, 'load', initialize);
+        google.maps.event.addDomListener(window, 'load', initMap);
     </script>-->
     <script src="https://maps.googleapis.com/maps/api/js?callback=initialize"
     async defer></script>
